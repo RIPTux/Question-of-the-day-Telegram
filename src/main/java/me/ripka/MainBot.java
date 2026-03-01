@@ -110,8 +110,23 @@ public class MainBot extends TelegramLongPollingBot {
                 }
             } else if(messageText.startsWith("/question") || messageText.startsWith("+опрос")) {
                 if (verevicationGroupOwner(userId, chat.getId()) && userId != chat.getId() || owner && userId != chat.getId()) {
-                    sendAndPinMessage(chat.getId(), "*Вопрос дня:*\n `" + questionDataBase.getRandomQuestion() + "`");
-                    timeLogDataBase.questionSend(chat.getId(), System.currentTimeMillis());
+                    if (!groupWhiteList.isGroupExists(chatId)) {
+                        sendMessage(chatId, "Данного чата нет в моем вайт листе!");
+                        sendMessage(chatId, "В случае если это ошибка напишите @TorvaldsUniX!");
+
+                        LeaveChat leaveChat = new LeaveChat();
+                        leaveChat.setChatId(chatId);
+
+                        logAdminCommand.addLog("groupCheckNotWhiteList", null, chatId, "denied");
+                        try {
+                            execute(leaveChat);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        sendAndPinMessage(chat.getId(), "*Вопрос дня:*\n `" + questionDataBase.getRandomQuestion() + "`");
+                        timeLogDataBase.questionSend(chat.getId(), System.currentTimeMillis());
+                    }
                 }
             }
 
@@ -205,31 +220,15 @@ public class MainBot extends TelegramLongPollingBot {
         message.setText(text);
         message.setParseMode("MarkdownV2");
 
+        try {
+            Message sentMessage = execute(message);
 
-        if (!groupWhiteList.isGroupExists(chatId)) {
-            sendMessage(chatId, "Данного чата нет в моем вайт листе!");
-            sendMessage(chatId, "В случае если это ошибка напишите @TorvaldsUniX!");
-
-            LeaveChat leaveChat = new LeaveChat();
-            leaveChat.setChatId(chatId);
-
-            logAdminCommand.addLog("groupCheckNotWhiteList", null, chatId, "denied");
-            try {
-                execute(leaveChat);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                Message sentMessage = execute(message);
-
-                PinChatMessage pin = new PinChatMessage();
-                pin.setChatId(chatId);
-                pin.setMessageId(sentMessage.getMessageId());
-                execute(pin);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            PinChatMessage pin = new PinChatMessage();
+            pin.setChatId(chatId);
+            pin.setMessageId(sentMessage.getMessageId());
+            execute(pin);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 }
