@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'me.ripka'
+version = '1.1'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'org.xerial:sqlite-jdbc:3.45.0.0'
+    implementation 'org.telegram:telegrambots:6.9.7.1'
+    implementation 'org.yaml:snakeyaml:2.2'
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'me.ripka.Main'
+        )
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('')
+}
