@@ -29,7 +29,9 @@ public class TimeLogDataBase {
 
     public String questionSend(long groupId, long time) {
         try {
+            System.out.println("questionSend");
             if (!groupCheck(groupId, time)) {
+                System.out.println("questionSend false");
 
                 String insertSQL = "INSERT INTO timelog (groupId, time) VALUES (?, ?)";
 
@@ -108,7 +110,7 @@ public class TimeLogDataBase {
             String sql = "DELETE FROM timelog WHERE groupId = ?";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, chatId);
+            pstmt.setString(1, String.valueOf(chatId));
 
             int deleted = pstmt.executeUpdate();
 

@@ -110,8 +110,8 @@ public class MainBot extends TelegramLongPollingBot {
                 }
             } else if(messageText.startsWith("/question") || messageText.startsWith("+опрос")) {
                 if (verevicationGroupOwner(userId, chat.getId()) && userId != chat.getId() || owner && userId != chat.getId()) {
-                    sendAndPinMessage(chat.getId(), "*Вопрос дня:*\n `" + questionDataBase.getRandomQuestion() + "`");
                     timeLogDataBase.questionSend(chat.getId(), System.currentTimeMillis());
+                    sendAndPinMessage(chat.getId(), "*Вопрос дня:*\n `" + questionDataBase.getRandomQuestion() + "`");
                 }
             }
 
@@ -207,9 +207,9 @@ public class MainBot extends TelegramLongPollingBot {
             leaveChat.setChatId(chatId);
 
             logAdminCommand.addLog("groupCheckNotWhiteList", null, chatId, "denied");
-            timeLogDataBase.deleteGroup(chatId);
             try {
                 execute(leaveChat);
+                timeLogDataBase.deleteGroup(chatId);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
