@@ -29,10 +29,7 @@ public class TimeLogDataBase {
 
     public String questionSend(long groupId, long time) {
         try {
-            System.out.println("questionSend");
             if (!groupCheck(groupId, time)) {
-                System.out.println("questionSend false");
-
                 String insertSQL = "INSERT INTO timelog (groupId, time) VALUES (?, ?)";
 
                 pstmt = conn.prepareStatement(insertSQL);

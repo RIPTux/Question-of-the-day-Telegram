@@ -102,7 +102,7 @@ public class MainBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
             boolean owner = vereficationOwner(userId);
 
-            if (messageText.startsWith("/start")) {
+            if (messageText.equals("/start") && messageText.equals("/start@SparkleMabelBot")) {
                 if (Long.parseLong(config.getString("bot.owner")) == userId) {
                     sendMessage(chat.getId(), config.getString("message.startAdminMessage"));
                 } else {
@@ -150,7 +150,7 @@ public class MainBot extends TelegramLongPollingBot {
                     sendAndPinMessage(groupId, "*Вопрос дня:*\n\n `" + questionDataBase.getRandomQuestion() + "`");
                     timeLogDataBase.questionSend(groupId, System.currentTimeMillis());
                 }
-            }, 0, 30, TimeUnit.MINUTES);
+            }, 0, 5, TimeUnit.MINUTES);
     }
 
     private boolean vereficationOwner(long userId) {
